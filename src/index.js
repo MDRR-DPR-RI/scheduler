@@ -6,7 +6,7 @@ const sourceDbConfig  = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
   password: '',
-  database: 'database',
+  database: 'big_database',
 });
 
 const destinationDbConfig  = mysql.createConnection( {
@@ -21,12 +21,12 @@ const destinationDbConfig  = mysql.createConnection( {
 // Function to transfer data
 function transferData() {
   // Retrieve data from the source database
-  sourceDbConfig.query('SELECT * FROM r_u_u_s', (err, results) => {
+  sourceDbConfig.query('SELECT * FROM ruu', (err, results) => {
     if (err) throw err;
 
     // Insert data into the destination database
     results.forEach((row) => {
-      destinationDbConfig.query('INSERT INTO r_u_u_s SET ? ON DUPLICATE KEY UPDATE ?', [row, row], (err) => {
+      destinationDbConfig.query('INSERT INTO ruu SET ? ON DUPLICATE KEY UPDATE ?', [row, row], (err) => {
         if (err) throw err;
       });
     });
