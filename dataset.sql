@@ -24,19 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ruu`
+-- Table structure for table `ruus`
 --
 
-CREATE TABLE `ruu` (
+CREATE TABLE `ruus` (
   `id` int(11) NOT NULL,
   `judul` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `ruu`
+-- Dumping data for table `ruus`
 --
 
-INSERT INTO `ruu` (`id`, `judul`) VALUES
+INSERT INTO `ruus` (`id`, `judul`) VALUES
 (1, 'Sample Ruu 1'),
 (2, 'Sample Ruu 2'),
 (3, 'Sample Ruu 3');
@@ -46,9 +46,9 @@ INSERT INTO `ruu` (`id`, `judul`) VALUES
 --
 
 --
--- Indexes for table `ruu`
+-- Indexes for table `ruus`
 --
-ALTER TABLE `ruu`
+ALTER TABLE `ruus`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -56,9 +56,9 @@ ALTER TABLE `ruu`
 --
 
 --
--- AUTO_INCREMENT for table `ruu`
+-- AUTO_INCREMENT for table `ruus`
 --
-ALTER TABLE `ruu`
+ALTER TABLE `ruus`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 

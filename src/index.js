@@ -21,12 +21,12 @@ const destinationDbConfig  = mysql.createConnection( {
 // Function to transfer data
 function transferData() {
   // Retrieve data from the source database
-  sourceDbConfig.query('SELECT * FROM ruu', (err, results) => {
+  sourceDbConfig.query('SELECT * FROM ruus', (err, results) => {
     if (err) throw err;
 
     // Insert data into the destination database
     results.forEach((row) => {
-      destinationDbConfig.query('INSERT INTO ruu SET ? ON DUPLICATE KEY UPDATE ?', [row, row], (err) => {
+      destinationDbConfig.query('INSERT INTO ruus SET ? ON DUPLICATE KEY UPDATE ?', [row, row], (err) => {
         if (err) throw err;
       });
     });

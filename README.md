@@ -28,13 +28,13 @@ CREATE DATABASE IF NOT EXISTS big_database;
 
 USE big_database;
 
-CREATE TABLE IF NOT EXISTS `ruu` (
+CREATE TABLE IF NOT EXISTS `ruus` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `judul` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
-INSERT INTO `ruu` (`judul`) VALUES
+INSERT INTO `ruus` (`judul`) VALUES
   ('Sample Ruu 1'),
   ('Sample Ruu 2'),
   ('Sample Ruu 3');
@@ -48,7 +48,7 @@ CREATE DATABASE IF NOT EXISTS dataset;
 
 USE dataset;
 
-CREATE TABLE IF NOT EXISTS `ruu` (
+CREATE TABLE IF NOT EXISTS `ruus` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `judul` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`)
