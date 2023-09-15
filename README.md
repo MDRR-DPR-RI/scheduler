@@ -74,4 +74,4 @@ With this data transfer scheduler, data in the source database can be seamlessly
 
 ## So?
 
-so if data in table ruu in big_database changes or if you add another value in table ruu in big_database, it will automaticly transfer the data/value into another database (dataset).
+so if data in table ruu in big_database changes or if you add another value in table ruu in big_database, it will automaticly transfer the data/value into another database (dataset) every 15 seconds.
