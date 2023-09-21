@@ -1,6 +1,6 @@
 # Data Transfer Scheduler
 
-This Node.js script is designed to transfer data from one MySQL database to another at regular intervals. It retrieves data from a source database and inserts or updates it in a destination database, ensuring that the data is synchronized.
+The script is designed to periodically fetch data from an external API and insert specific fields into a MySQL database. It uses the Axios library for making API requests and the mysql2 library for database connections.
 
 ## Prerequisites
 
@@ -19,27 +19,7 @@ Before using this script, make sure you have the following prerequisites install
    npm install
    ```
 
-3. Execute the SQL scripts to set up your databases. First, create the databases, tables, and insert initial data. Here are the SQL scripts you can use:
-
-- Source Database Setup:
-
-```
-CREATE DATABASE IF NOT EXISTS big_database;
-
-USE big_database;
-
-CREATE TABLE IF NOT EXISTS `ruus` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `judul` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
-INSERT INTO `ruus` (`judul`) VALUES
-  ('Sample Ruu 1'),
-  ('Sample Ruu 2'),
-  ('Sample Ruu 3');
-
-```
+3. Execute the SQL scripts to set up your databases. First, create the databases, tables. Here are the SQL scripts you can use:
 
 - Destination Database Setup:
 
@@ -51,35 +31,22 @@ USE dataset;
 CREATE TABLE IF NOT EXISTS `ruus` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `judul` VARCHAR(255) NOT NULL,
+  `pengusul` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 ```
 ## Configuration
 
-Before running the script, you need to configure the database connection details for both the source and destination databases. Follow the steps below to set up your configuration:
+Before running the script, you need to configure the API URL and your database connection details for destination databases. Follow the steps below to set up your configuration:
 
-### Source Database Configuration
+### API URL configuration
 
-1. Open the `src/index.js` file.
+1. Replace `'YOUR_API_URL'` with the actual URL of the API from which you want to fetch data.
 
-2. Locate the following code block:
-
-    ```javascript
-    const sourceDbConfig = {
-      host: 'source_database_host',
-      user: 'source_database_user',
-      password: 'source_database_password',
-      database: 'source_database_name',
-    };
-    ```
-
-3. Replace the placeholders with your actual source database credentials:
-
-    - `source_database_host`: The hostname or IP address of your source database server.
-    - `source_database_user`: The username to access your source database.
-    - `source_database_password`: The password for the source database user.
-    - `source_database_name`: The name of your source database.
+ ```javascript
+    const response = await axios.get('YOUR_API_URL'); // API URL
+ ```
 
 ### Destination Database Configuration
 
@@ -103,8 +70,21 @@ Before running the script, you need to configure the database connection details
 
 Once you've configured both the source and destination database details, you can run the script to start the data transfer process.
 
+## Script Structure
 
-## Usage
+The script is structured as follows:
+
+1. Import necessary libraries, including Axios and mysql2.
+
+2. Define the database connection configuration for the destination database (MySQL).
+
+3. Create a function `fetchDataFromAPI` that fetches data from the API using Axios, extracts the required fields, and inserts them into the MySQL database.
+
+4. Create a function `runDataTransfer` that periodically calls `fetchDataFromAPI` and schedules the next data transfer every 15 seconds.
+
+5. Start the data transfer by calling `runDataTransfer`.
+
+## Running the Script
 
 - using nodemon
 
@@ -118,8 +98,7 @@ npm run dev
 npm start
 ```
 
-With this data transfer scheduler, data in the source database can be seamlessly transferred or inserted into the destination database every 15 seconds. This ensures that both databases are kept synchronized, and any changes in the source database are reflected in the destination database in near real-time.
+## Conclusion
 
-## So?
+This script allows you to automate the process of fetching data from an API and storing it in a MySQL database at regular intervals. It can be customized to suit your specific use case.
 
-so if data in table ruu in big_database changes or if you add another value in table ruu in big_database, it will automaticly transfer the data/value into another database (dataset) every 15 seconds.
