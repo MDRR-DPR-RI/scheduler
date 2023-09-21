@@ -104,7 +104,7 @@ Before running the script, you need to configure the database connection details
 Once you've configured both the source and destination database details, you can run the script to start the data transfer process.
 
 
-## Usage
+## Running the Script
 
 - using nodemon
 
