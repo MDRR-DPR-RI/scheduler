@@ -1,8 +1,8 @@
 // Import necessary libraries
 const mysql = require('mysql2');
-const axios = require('axios'); // Import Axios for making API requests
+const axios = require('axios');
 
-// Define database connection configurations for source and destination databases
+// Define database connection configurations for the destination database
 const destinationDbConfig = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
@@ -10,23 +10,28 @@ const destinationDbConfig = mysql.createConnection({
   database: 'dataset',
 });
 
-// Create a function to fetch data from the API
-async function fetchDataFromAPI() {
+// Create a function to fetch data from the API and insert or update it
+async function fetchDataFromAPIAndInsertOrUpdate() {
   try {
-    const response = await axios.get('http://localhost:3000/database'); // API URL
-    const data = response.data.data; // Extract the "data" array from the API response
+    const response = await axios.get('https://www.dpr.go.id/rest/?method=getSemuaAnggota&tipe=json');
+    const items = response.data.anggota.item; // Access 'data' property and then 'anggota' and 'item'
 
-    // Insert data into the destination database
-    data.forEach((item) => {
-      const { judul, pengusul } = item;
-      const query = 'INSERT INTO ruus (judul, pengusul) VALUES (?, ?)';
+    // Insert or update data into the destination database
+    for (const item of items) {
+      const { id, no_anggota, nama, dapil } = item;
+      const query =
+        'INSERT INTO anggotas (id, no_anggota, nama, dapil) ' +
+        'VALUES (?, ?, ?, ?) ' +
+        'ON DUPLICATE KEY UPDATE ' +
+        'nama = VALUES(nama), dapil = VALUES(dapil)';
 
-      destinationDbConfig.query(query, [judul, pengusul], (err) => {
-        if (err) {
-          console.error('Error inserting data:', err);
-        }
-      });
-    });
+      try {
+        await destinationDbConfig.promise().execute(query, [id, no_anggota, nama, dapil]);
+        console.log('Inserted or updated data:', { id, no_anggota, nama, dapil });
+      } catch (err) {
+        console.error('Error inserting or updating data:', err);
+      }
+    }
 
     console.log('Data transfer success');
   } catch (error) {
@@ -36,7 +41,7 @@ async function fetchDataFromAPI() {
 
 // Function to periodically run the data transfer
 function runDataTransfer() {
-  fetchDataFromAPI();
+  fetchDataFromAPIAndInsertOrUpdate();
 
   // Schedule the next data transfer in 15 seconds
   setTimeout(runDataTransfer, 15000); // 15 seconds
