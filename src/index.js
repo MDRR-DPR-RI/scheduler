@@ -16,18 +16,27 @@ async function fetchDataFromAPIAndInsertOrUpdate() {
     const response = await axios.get('https://www.dpr.go.id/rest/?method=getSemuaAnggota&tipe=json');
     const items = response.data.anggota.item; // Access 'data' property and then 'anggota' and 'item'
 
-    // Insert or update data into the destination database
+    // Create a map to store the count of members per fraksi
+    const fraksiCountMap = new Map();
+
+    // Count members per fraksi
     for (const item of items) {
-      const { id, no_anggota, nama, dapil } = item;
-      const query =
-        'INSERT INTO anggotas (id, no_anggota, nama, dapil) ' +
-        'VALUES (?, ?, ?, ?) ' +
-        'ON DUPLICATE KEY UPDATE ' +
-        'nama = VALUES(nama), dapil = VALUES(dapil)';
+      const { fraksi } = item;
+      if (fraksiCountMap.has(fraksi)) {
+        fraksiCountMap.set(fraksi, fraksiCountMap.get(fraksi) + 1);
+      } else {
+        fraksiCountMap.set(fraksi, 1);
+      }
+    }
+
+    // Insert or update data into the destination database
+    for (const [fraksi, count] of fraksiCountMap.entries()) {
+      const query = `INSERT INTO cleans (judul, keterangan, jumlah) VALUES ('Fraksi', ?, ?)
+                     ON DUPLICATE KEY UPDATE jumlah = VALUES(jumlah)`;
 
       try {
-        await destinationDbConfig.promise().execute(query, [id, no_anggota, nama, dapil]);
-        console.log('Inserted or updated data:', { id, no_anggota, nama, dapil });
+        await destinationDbConfig.promise().execute(query, [fraksi, count]);
+        console.log(`Inserted or updated data for Fraksi ${fraksi}: Count = ${count}`);
       } catch (err) {
         console.error('Error inserting or updating data:', err);
       }
@@ -43,8 +52,8 @@ async function fetchDataFromAPIAndInsertOrUpdate() {
 function runDataTransfer() {
   fetchDataFromAPIAndInsertOrUpdate();
 
-  // Schedule the next data transfer in 15 seconds
-  setTimeout(runDataTransfer, 15000); // 15 seconds
+  // Schedule the next data transfer in 15 minutes
+  setTimeout(runDataTransfer, 15 * 60 * 1000); // 15 minutes in milliseconds
 }
 
 // Start the data transfer
