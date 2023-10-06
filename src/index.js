@@ -1,13 +1,15 @@
+require("dotenv").config();
 // Import necessary libraries
 const mysql = require('mysql2');
 const axios = require('axios');
 
 // Define database connection configurations for the destination database
 const destinationDbConfig = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: '',
-  database: 'dataset',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+
 });
 
 // Create a function to fetch data from the API and insert or update it
@@ -53,7 +55,7 @@ function runDataTransfer() {
   fetchDataFromAPIAndInsertOrUpdate();
 
   // Schedule the next data transfer in 15 minutes
-  setTimeout(runDataTransfer, 15 * 60 * 1000); // 15 minutes in milliseconds
+  setTimeout(runDataTransfer, 5000); // 15 minutes in milliseconds
 }
 
 // Start the data transfer
