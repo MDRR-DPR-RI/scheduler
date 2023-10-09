@@ -55,7 +55,7 @@ function runDataTransfer() {
   fetchDataFromAPIAndInsertOrUpdate();
 
   // Schedule the next data transfer in 15 minutes
-  setTimeout(runDataTransfer, 5000); // 15 minutes in milliseconds
+  setTimeout(runDataTransfer, 15 * 60 * 1000); // 15 minutes in milliseconds
 }
 
 // Start the data transfer
